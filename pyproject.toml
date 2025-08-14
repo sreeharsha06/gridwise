@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gridwise"
+version = "0.1.0"
+description = "GridWise — Efficient spreadsheet encoders for LLMs (SpreadsheetLLM-inspired)."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name="Sreeharsha Bellamkonda", email="sreeharshaa.bellamkonda@gmail.com"}]
+keywords = ["spreadsheets", "LLM", "encoding", "compression", "chunking"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Topic :: Scientific/Engineering :: Information Analysis",
+]
+
+dependencies = [
+  "pandas>=2.0",
+  "openpyxl>=3.1",
+  "pyarrow>=16",
+  "typing-extensions>=4.7",
+]
+
+[project.optional-dependencies]
+tokens = ["tiktoken>=0.7"]
+dev = [
+  "pytest>=7",
+  "pytest-cov>=4",
+  "ruff>=0.5.0",
+  "mypy>=1.6",
+  "pre-commit>=3.6",
+  "build>=1.2",
+  "twine>=5.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/sreeharsha06/gridwise"
+Issues = "https://github.com/sreeharsha06/gridwise/issues"
+
+[project.scripts]
+gridwise = "gridwise.cli:main"   # <— CLI entry point
