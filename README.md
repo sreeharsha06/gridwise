@@ -18,8 +18,7 @@ Turn spreadsheets into **LLM-friendly text**: compress, chunk, and retrieve with
   - Aggregation (merge values into compact form)  
 - 📦 **Chunking** to fit LLM context window limits  
 - 🔢 Token counting for **vanilla vs compressed** encodings  
-- 🔍 Built-in **BM25 retrieval** for natural language queries  
-- 🛠️ **Streaming CSV encoder** (low-memory, handles 100MB+ files)  
+- 🔍 Built-in **BM25 retrieval** for natural  
 - ⚡ Compatible with **RAG pipelines** out-of-the-box  
 
 ---
