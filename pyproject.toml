@@ -42,4 +42,14 @@ Homepage = "https://github.com/sreeharsha06/gridwise"
 Issues = "https://github.com/sreeharsha06/gridwise/issues"
 
 [project.scripts]
-gridwise = "gridwise.cli:main"   # <— CLI entry point
+gridwise = "gridwise.cli:main"
+
+# --- Setuptools config (package discovery & data) ---
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["gridwise*"]
+exclude = ["tests*", "examples*"]
+
+
+[tool.setuptools.package-data]
+gridwise = ["py.typed"]
