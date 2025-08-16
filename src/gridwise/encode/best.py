@@ -23,10 +23,9 @@ def best_encode(
     use_inverted_index: bool = True,
     use_aggregation: bool = True,
     output_mode: OutputMode = "compressed",
-    # NEW — knobs:
     dict_min_freq: int = 3,
     dict_encode_all_strings: bool = False,
-    dict_skip_if_shorter_than: int | None = 3,
+    dict_skip_if_shorter_than: int | None = None,
 ) -> BestEncodeResult:
     """
     Encode a spreadsheet into a token-efficient text representation with optional

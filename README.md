@@ -85,16 +85,8 @@ print("Compressed tokens:", res_c.tokens_compressed, "vs vanilla:", res_c.tokens
 jsonl_path = "encoded_output.gridwise.jsonl"
 save_chunks_jsonl(res_c.chunks, jsonl_path)
 
-# 4. Build & save index
-index = build_inverted_index(res_c.chunks)
-save_index(index, "encoded_output.index.pkl")
+save_to_txt("encoded_output.txt", res_c.text)
 
-# 5. Query
-chunks = load_chunks_jsonl(jsonl_path)
-index = load_index("encoded_output.index.pkl")
-
-results = bm25_score("What do people say about hearing tests?", chunks, index, topk=3)
-for r in results:
-    print(f"Hit {r['id']} | score={r['score']:.3f}")
-    print(r["content"][:200], "...\n")
+# 4. Query
+Use the saved files as input to your RAG pipeline or LLM for queries.
 ```
