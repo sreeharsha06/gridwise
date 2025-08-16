@@ -31,13 +31,15 @@ pip install -e ".[tokens]"
 
 # For contributors
 pip install -e ".[dev]"
+````
 
+---
 
-
-Quickstart (Python)
+## 🚀 Quickstart (Python)
 
 Encode a spreadsheet and get token-efficient text:
 
+```python
 from gridwise.io.loaders import from_csv
 from gridwise.encode.best import best_encode
 
@@ -52,8 +54,13 @@ print("Compressed tokens:", res.tokens_compressed, "vs vanilla:", res.tokens_van
 # Save encoded text
 with open("encoded_output.txt", "w", encoding="utf-8") as f:
     f.write(res.text)
+```
 
-🔍 End-to-End Example (Encoding + Indexing + Query)
+---
+
+## 🔍 End-to-End Example (Encoding + Indexing + Query)
+
+```python
 from gridwise.io.loaders import from_csv
 from gridwise.encode.best import best_encode
 from gridwise.store import (
@@ -90,3 +97,4 @@ results = bm25_score("What do people say about hearing tests?", chunks, index, t
 for r in results:
     print(f"Hit {r['id']} | score={r['score']:.3f}")
     print(r["content"][:200], "...\n")
+```
