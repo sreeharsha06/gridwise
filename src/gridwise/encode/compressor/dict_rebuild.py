@@ -27,7 +27,6 @@ def force_rebuild_dict_block(text: str, rev_dicts: Dict[str, Dict[str, str]]) ->
         for t in tnums:
             code = f"@C{{{col}}}t{t}"
             raw = rev.get(code)
-            # Always print a line; mark missing to surface wiring issues
             lines.append(f"{code}={raw if raw is not None else '<MISSING>'}")
     lines.append("[DICT-END]")
     return base + "\n" + "\n".join(lines) + "\n"

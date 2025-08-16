@@ -4,7 +4,7 @@ from typing import List, Dict, Optional, Literal
 
 from gridwise.encode.vanilla import to_markdown
 from gridwise.encode.compressor import encode as compress
-from gridwise.encode.chunking import window
+from gridwise.encode.chunking import chunk_anchor_and_dict_safe
 from gridwise.encode.post import parse_dict_block, expand_text_with_dict
 from gridwise.eval.tokens import count_tokens
 from gridwise.core.model import Sheet, BestEncodeResult
@@ -99,8 +99,8 @@ def best_encode(
                 use_inverted_index=use_inverted_index,
                 use_aggregation=use_aggregation,
                 dict_min_freq=dict_min_freq,
-                dict_encode_all_strings=dict_encode_all_strings,   # True for your case
-                dict_skip_if_shorter_than=dict_skip_if_shorter_than,  # 3, or None to include even 'No'
+                dict_encode_all_strings=dict_encode_all_strings,   
+                dict_skip_if_shorter_than=dict_skip_if_shorter_than,
             )
         comp_text = enc["content"]
         t_comp = count_tokens(comp_text)
@@ -109,7 +109,6 @@ def best_encode(
             kind = "compressed"
             comp_meta = enc.get("meta", {})
 
-    # 3) output_mode (expanded / auto) — keep your existing logic...
     mapping = parse_dict_block(chosen_text)
     if output_mode == "expanded" and mapping:
         chosen_text = expand_text_with_dict(chosen_text, mapping)
@@ -120,8 +119,7 @@ def best_encode(
             chosen_text = expanded
             kind = f"{kind}+expanded"
 
-    # 4) window
-    chunks = window(
+    chunks = chunk_anchor_and_dict_safe(
         chosen_text,
         max_tokens=max_tokens_per_chunk,
         overlap_tokens=overlap_tokens,

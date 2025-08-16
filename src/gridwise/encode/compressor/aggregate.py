@@ -26,6 +26,22 @@ def apply_aggregation(
     z_outlier: float = 3.0,
 ) -> Tuple[str, Dict]:
     
+    """
+    Reduce long blocks of spreadsheet rows by sampling, keeping anomalies, 
+    and adding compact numeric summaries.
+
+    - Keeps head/tail rows and periodic samples in the middle.
+    - Always retains rows with numeric outliers (z-score ≥ threshold).
+    - Appends a compact [AGG ...] line with per-column stats (count, min, max, mean, p10, p90).
+    - Leaves short spans unchanged.
+
+    Returns
+    -------
+    (str, dict)
+        Aggregated text and a metadata dict with sampling parameters.
+    """
+
+    
     lines = text.splitlines()
     N = len(lines)
     out: List[str] = []

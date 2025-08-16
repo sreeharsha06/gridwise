@@ -32,6 +32,60 @@ def apply_inverted_index(
     encode_all_strings: bool = True,
     skip_if_shorter_than: Optional[int] = None,
 ) -> Tuple[str, Dict]:
+    
+    """
+    Replace repeated string values in encoded spreadsheet text with short codes,
+    maintaining per-column dictionaries for later expansion.
+
+    This compression pass scans cell values in the encoded text, normalizes them
+    (whitespace collapsed, quotes preserved), and assigns deterministic codes of
+    the form ``@C{COL}tN`` per column. It is especially effective when many
+    repeated strings (e.g. categories, names, survey responses) appear.
+
+    Parameters
+    ----------
+    text : str
+        Encoded spreadsheet text (as produced by GridWise vanilla encoder).
+    min_freq : int, default=3
+        Minimum frequency for a string (per column) to be encoded if
+        ``encode_all_strings`` is False.
+    encode_all_strings : bool, default=True
+        If True, encode every string value regardless of frequency.
+        If False, only encode values with frequency >= ``min_freq``.
+    skip_if_shorter_than : int or None, default=None
+        If set, string values shorter than this length are not encoded
+        (useful to avoid replacing very short labels with codes that may
+        actually cost more tokens).
+
+    Returns
+    -------
+    Tuple[str, Dict]
+        - ``new_text`` : str  
+          Text with string values replaced by codes like ``@C{A}t4``.  
+          Any pre-existing ``[DICT-BEGIN]...[DICT-END]`` blocks are stripped.  
+        - ``meta`` : dict  
+          Metadata including:
+          * ``per_column`` (bool) — dictionaries are built per column
+          * ``encode_all_strings`` / ``min_freq`` / ``skip_if_shorter_than`` (settings)
+          * ``rev_dicts`` — reverse dictionaries mapping codes → exemplar quoted values
+
+    Notes
+    -----
+    - Codes are assigned **per column** in descending frequency order, with
+      ties broken by first-seen order.
+    - Normalization collapses whitespace inside values but preserves quoted form.
+    - The reverse dictionaries allow you to later expand codes back into their
+      original strings when preparing prompts.
+
+    Example
+    -------
+    >>> compressed, meta = apply_inverted_index(encoded_text, min_freq=2)
+    >>> print(compressed.splitlines()[0])
+    A1=@C{A}t1 | B1=@C{B}t2
+    >>> print(meta["rev_dicts"]["A"]["@C{A}t1"])
+    "'Yes'"
+    """
+    
     lines = text.splitlines()
 
     col_freq_norm: DefaultDict[str, Counter] = defaultdict(Counter)
@@ -87,7 +141,6 @@ def apply_inverted_index(
         out_lines.append(new_ln)
 
     replaced = "\n".join(out_lines)
-    # Remove any legacy DICTs now so later stages start clean
     replaced = re.sub(DICT_BLOCK_GLOBAL_RE, "", replaced).rstrip()
 
     meta = {

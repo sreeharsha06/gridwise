@@ -6,9 +6,34 @@ TOTALS_RE = re.compile(r"(?i)\b(total|subtotal|sum|avg|average)\b")
 
 def apply_anchors(text: str, k_keep_between: int = 0) -> Tuple[str, Dict]:
     """
-    Mark structural anchors and (optionally) collapse long spans between anchors.
-    Anchors: "# Sheet:", '::header', [META] lines, totals-like rows.
+    Mark and preserve anchor lines in encoded spreadsheet text, optionally collapsing 
+    large spans between anchors.
+
+    Anchors include:
+    - Sheet titles (first line starting with "# Sheet:")
+    - Header rows (lines containing "::header")
+    - Metadata lines (starting with "[META]")
+    - Totals/aggregate rows (matching keywords like total, subtotal, sum, avg)
+
+    Between anchors, long spans of rows can be collapsed, keeping only the first and 
+    last `k_keep_between` lines with a summary placeholder.
+
+    Parameters
+    ----------
+    text : str
+        Full encoded spreadsheet text.
+    k_keep_between : int, default=0
+        Number of lines to keep at the start and end of long spans between anchors.
+        If 0, spans are kept verbatim.
+
+    Returns
+    -------
+    Tuple[str, Dict]
+        - Collapsed text with anchors marked as "[ANCHOR]..."
+        - Metadata with indices of kept anchor lines and applied rule description
     """
+
+
     lines = text.splitlines()
     N = len(lines)
     is_anchor = [False] * N

@@ -4,15 +4,12 @@ from pathlib import Path
 from typing import List, Dict
 from collections import Counter
 
-# keep codes whole + unicode words
 _CODE_RE = re.compile(r"@C\{[A-Z]+\}t\d+")
 _WORD_RE = re.compile(r"\w+", re.UNICODE)
 
 def _tokenize(text: str) -> List[str]:
     tokens = []
-    # preserve dictionary codes as single tokens
     tokens.extend(m.group(0).lower() for m in _CODE_RE.finditer(text))
-    # add regular words
     tokens.extend(t.lower() for t in _WORD_RE.findall(text))
     return tokens
 
@@ -37,7 +34,7 @@ def build_inverted_index(chunks: List[Dict]) -> Dict:
     df: Dict[str, int] = {}
     postings: Dict[str, Dict[int, int]] = {}
     for ch in chunks:
-        doc_id = ch["id"]            # do not force int; keep whatever id you used
+        doc_id = ch["id"]            
         terms = _tokenize(ch["content"])
         tf_local = Counter(terms)
         for t, tf in tf_local.items():
@@ -52,6 +49,18 @@ def save_index(index: Dict, path: str) -> None:
 def load_index(path: str) -> Dict:
     with open(path, "rb") as f:
         return pickle.load(f)
+    
+def save_to_txt(path: str, text: str, encoding: str = "utf-8") -> None:
+    """
+    Save the given text into a file.
+
+    Args:
+        path (str): File path to write to.
+        text (str): Content to write.
+        encoding (str): File encoding (default: utf-8).
+    """
+    with open(path, "w", encoding=encoding) as f:
+        f.write(text)
 
 def bm25_score(query: str, chunks: List[Dict], index: Dict, k1: float = 1.5, b: float = 0.75, topk: int = 5) -> List[Dict]:
     if not query.strip():

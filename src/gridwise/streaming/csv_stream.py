@@ -56,18 +56,11 @@ def stream_encode_csv_to_jsonl(
     sheet_name: Optional[str] = None,
     output_mode: str = "compressed",  # "compressed" | "expanded"
 ) -> Tuple[str, Optional[str]]:
-    """
-    Two-pass streaming encoder for large CSVs:
-      Pass 1: build per-column string frequency (optional dictionary)
-      Pass 2: render lines, (optionally) apply dictionary, window to JSONL
-    Returns: (jsonl_path, dict_sidecar_path_or_none)
-    """
     src = Path(path)
     if out_jsonl is None:
         out_jsonl = str(src.with_suffix("")) + ".gridwise.jsonl"
     jsonl_path = Path(out_jsonl)
 
-    # PASS 1: frequencies
     per_col_freq: Dict[int, Counter] = defaultdict(Counter)
     col_names: Optional[List[str]] = None
     reader1 = pd.read_csv(path, usecols=usecols, chunksize=chunksize)

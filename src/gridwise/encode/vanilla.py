@@ -3,10 +3,6 @@ from typing import List
 from gridwise.core.model import Sheet, Cell
 
 def to_markdown(sheet: Sheet, include_format: bool = True) -> str:
-    """
-    Row-major textual serialization with cell addresses and optional ::format.
-    Preserves structure for SheetCompressor (paper baseline).
-    """
     lines: List[str] = [f"# Sheet: {sheet.name} ({sheet.nrows}x{sheet.ncols})"]
     if sheet.frozen:
         fr, fc = sheet.frozen
