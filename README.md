@@ -17,8 +17,7 @@ Turn spreadsheets into **LLM-friendly text**: compress, chunk, and retrieve with
   - Inverted dictionary (replace repeated strings)  
   - Aggregation (merge values into compact form)  
 - 📦 **Chunking** to fit LLM context window limits  
-- 🔢 Token counting for **vanilla vs compressed** encodings  
-- 🔍 Built-in **BM25 retrieval** for natural  
+- 🔢 Token counting for **vanilla vs compressed**
 - ⚡ Compatible with **RAG pipelines** out-of-the-box  
 
 ---
