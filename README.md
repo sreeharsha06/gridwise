@@ -33,31 +33,6 @@ pip install -e ".[tokens]"
 pip install -e ".[dev]"
 ````
 
----
-
-## 🚀 Quickstart (Python)
-
-Encode a spreadsheet and get token-efficient text:
-
-```python
-from gridwise.io.loaders import from_csv
-from gridwise.encode.best import best_encode
-
-# Load CSV → Sheet
-sheet = from_csv("my_dataset.csv")
-
-# Encode sheet with compression
-res = best_encode(sheet, output_mode="compressed")
-
-print("Compressed tokens:", res.tokens_compressed, "vs vanilla:", res.tokens_vanilla)
-
-# Save encoded text
-with open("encoded_output.txt", "w", encoding="utf-8") as f:
-    f.write(res.text)
-```
-
----
-
 ## 🔍 End-to-End Example (Encoding + Indexing + Query)
 
 ```python
